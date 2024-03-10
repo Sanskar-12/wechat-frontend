@@ -5,6 +5,7 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  Backdrop,
 } from "@mui/material";
 import { darkBlue } from "../../constants/color";
 import {
@@ -16,7 +17,10 @@ import {
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
+const Search = lazy(() => import("../../specific/Search"));
+const Notifications = lazy(() => import("../../specific/Notifications"));
+const GroupDialog = lazy(() => import("../../dialog/GroupDialog"));
 
 const Header = () => {
   const navigate = useNavigate();
@@ -124,6 +128,24 @@ const Header = () => {
           </Toolbar>
         </AppBar>
       </Box>
+
+      {isSearch && (
+        <Suspense fallback={<Backdrop open />}>
+          <Search />
+        </Suspense>
+      )}
+
+      {isNotifications && (
+        <Suspense fallback={<Backdrop open />}>
+          <Notifications />
+        </Suspense>
+      )}
+
+      {isNewGroup && (
+        <Suspense fallback={<Backdrop open />}>
+          <GroupDialog />
+        </Suspense>
+      )}
     </>
   );
 };
