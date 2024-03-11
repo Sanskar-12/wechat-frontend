@@ -18,9 +18,10 @@ const UserItemPage = ({ user, handler, handlerIsLoading }) => {
         <Typography
           variant="body1"
           sx={{
-            flexGrow: 1,
+            flexGlow: 1,
             display: "-webkit-box",
-            WebkitLineClamp: "vertical",
+            WebkitLineClamp: "1",
+            WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textOverflow: "ellipsis",
             width: "100%",
