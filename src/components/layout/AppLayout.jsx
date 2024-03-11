@@ -6,6 +6,7 @@ import Header from "./Header";
 import ChatList from "../../specific/ChatList";
 import { sampleData } from "../../constants/sampleData";
 import { useParams } from "react-router-dom";
+import Profile from "../shared/Profile";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -51,7 +52,7 @@ const AppLayout = () => (WrappedComponent) => {
               bgcolor: "rgba(0,0,0,0.85)",
             }}
           >
-            Third
+            <Profile />
           </Grid>
         </Grid>
 

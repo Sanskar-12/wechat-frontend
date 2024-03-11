@@ -27,3 +27,20 @@ export const sampleData = [
     members: ["1", "2"],
   },
 ];
+
+export const sampleUsers = [
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "John sdfsdf",
+    _id: "1",
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "John sdfsdf",
+    _id: "2",
+  },
+];

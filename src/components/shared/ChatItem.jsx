@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Link } from "../styles/StyledComponents";
 import { Stack, Typography, Box } from "@mui/material";
+import AvatarCard from "./AvatarCard";
 
 const ChatItemBox = ({
   avatar = [],
@@ -34,7 +35,7 @@ const ChatItemBox = ({
           position: "relative",
         }}
       >
-        {/* Avatar */}
+        <AvatarCard avatar={avatar} />
         <Stack>
           <Typography>{name}</Typography>
           {newMessageAlert && (
