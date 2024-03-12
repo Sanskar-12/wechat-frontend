@@ -71,14 +71,25 @@ export const sampleMessage = [
     attachments: [
       {
         public_id: "sddsfs",
-        url: "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+        url: "https://cdn.pixabay.com/photo/2015/03/10/17/23/youtube-667451_1280.png",
       },
     ],
-    content: "Hello hi",
+    content: "",
     _id: "sdfsdfdfsdfsdfsdfdsf",
     sender: {
       _id: "userid",
       name: "Chaman",
+    },
+    chat: "chatId",
+    createdAt: "2024-03-12T04:54:34.674Z",
+  },
+  {
+    attachments: [],
+    content: "Hello hi2",
+    _id: "sdfsdfdfsdfsdfsdfdsf2",
+    sender: {
+      _id: "sdfsfds",
+      name: "Chaman 2",
     },
     chat: "chatId",
     createdAt: "2024-03-12T04:54:34.674Z",
