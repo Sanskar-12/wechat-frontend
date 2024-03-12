@@ -5,7 +5,7 @@ export const sampleData = [
     ],
     name: "John Doe",
     _id: "1",
-    groupChat: false,
+    groupChat: true,
     members: ["1", "2"],
   },
   {
