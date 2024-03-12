@@ -25,13 +25,13 @@ const GroupDialog = () => {
     );
   };
 
-  console.log(selectedMembers);
-
   const submitHandler = () => {};
 
+  const closeHandler = () => {};
+
   return (
-    <Dialog open>
-      <Stack p={{ xs: "1rem", sm: "3rem" }} width={"25rem"} spacing={"1rem"}>
+    <Dialog open onClose={closeHandler}>
+      <Stack p={{ xs: "1rem", sm: "2rem" }} width={"25rem"} spacing={"1rem"}>
         <DialogTitle textAlign={"center"} variant="h4">
           New Group
         </DialogTitle>
@@ -49,6 +49,7 @@ const GroupDialog = () => {
               user={user}
               key={user._id}
               handler={selectMemberHandler}
+              isAdded={selectedMembers.includes(user._id)}
             />
           ))}
         </Stack>
