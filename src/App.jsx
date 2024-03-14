@@ -11,6 +11,7 @@ const Groups = lazy(() => import("./pages/Groups"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const AdminLogin = lazy(() => import("../src/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("../src/admin/AdminDashboard"));
 
 const App = () => {
   let user = true;
@@ -35,7 +36,7 @@ const App = () => {
           />
 
           <Route path="/admin/login" element={<AdminLogin />} />
-
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
