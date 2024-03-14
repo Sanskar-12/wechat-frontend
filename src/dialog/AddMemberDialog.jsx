@@ -1,34 +1,64 @@
 /* eslint-disable react/prop-types */
-import {
-  Stack,
-  Dialog,
-  DialogTitle,
-  Typography,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-} from "@mui/material";
+import { Stack, Dialog, DialogTitle, Typography, Button } from "@mui/material";
 import UserItem from "../components/shared/UserItem";
 import { sampleUsers } from "../constants/sampleData";
+import { useState } from "react";
 
 const AddMemberDialog = ({ addMember, isLoadingAddMember, chatId }) => {
-  const addFriendHandler = (id) => {
-    console.log(id, chatId);
+  const [members, setMembers] = useState(sampleUsers);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+
+  const selectMemberHandler = (id) => {
+    setSelectedMembers((prev) =>
+      prev.includes(id)
+        ? prev.filter((current) => current !== id)
+        : [...prev, id]
+    );
+  };
+
+  const addMemberSubmitHandler = () => {
+    closeHandler();
+  };
+
+  const closeHandler = () => {
+    setSelectedMembers([]);
+    setMembers([]);
   };
 
   return (
-    <Dialog open>
+    <Dialog open onClose={closeHandler}>
       <Stack p={"2rem"} width={"20rem"} spacing={"2rem"}>
         <DialogTitle>Add Member</DialogTitle>
         <Stack spacing={"1rem"}>
-          {sampleUsers.length > 0 ? (
-            sampleUsers.map((user) => (
-              <UserItem key={user._id} user={user} handler={addFriendHandler} />
+          {members.length > 0 ? (
+            members.map((user) => (
+              <UserItem
+                key={user._id}
+                user={user}
+                handler={selectMemberHandler}
+                isAdded={selectedMembers.includes(user._id)}
+              />
             ))
           ) : (
             <Typography textAlign={"center"}>No Friends</Typography>
           )}
+        </Stack>
+
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"space-evenly"}
+        >
+          <Button color="error" onClick={closeHandler}>
+            Cancel
+          </Button>
+          <Button
+            onClick={addMemberSubmitHandler}
+            variant="contained"
+            disabled={isLoadingAddMember}
+          >
+            Submit Changes
+          </Button>
         </Stack>
       </Stack>
     </Dialog>

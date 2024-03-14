@@ -21,11 +21,12 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Suspense, lazy, useEffect, useState } from "react";
 import GroupList from "../specific/GroupList";
-import { sampleData } from "../constants/sampleData";
+import { sampleData, sampleUsers } from "../constants/sampleData";
+import UserItem from "../components/shared/UserItem";
 const ConfirmDeleteDialog = lazy(() => import("../dialog/ConfirmDeleteDialog"));
 const AddMemberDialog = lazy(() => import("../dialog/AddMemberDialog"));
 
-const isAddMember = true;
+const isAddMember = false;
 
 const Groups = () => {
   const chatId = useSearchParams()[0].get("group");
@@ -74,9 +75,15 @@ const Groups = () => {
     console.log("Add Member");
   };
 
+  const removeMemberHandler = (id) => {
+    console.log(id);
+  };
+
   useEffect(() => {
-    setGroupName(`group Name ${chatId}`);
-    setUpdatedGroupName(`group Name ${chatId}`);
+    if (chatId) {
+      setGroupName(`group Name ${chatId}`);
+      setUpdatedGroupName(`group Name ${chatId}`);
+    }
 
     return () => {
       setGroupName("");
@@ -200,7 +207,6 @@ const Groups = () => {
           },
         }}
         sm={4}
-        bgcolor={"#CAF0F8"}
       >
         <GroupList myGroups={sampleData} chatId={chatId} />
       </Grid>
@@ -227,7 +233,7 @@ const Groups = () => {
               alignSelf={"flex-start"}
               variant="body1"
             >
-              Members
+              Group Members
             </Typography>
 
             <Stack
@@ -240,10 +246,23 @@ const Groups = () => {
                 md: "1rem 4rem",
               }}
               spacing={"2rem"}
-              bgcolor={"bisque"}
               height={"50vh"}
               overflow={"auto"}
-            ></Stack>
+            >
+              {sampleUsers.map((user) => (
+                <UserItem
+                  key={user._id}
+                  user={user}
+                  isAdded
+                  styling={{
+                    boxShadow: "0 0 0.5rem rgba(0,0,0,0.2)",
+                    padding: "1rem 2rem",
+                    borderRadius: "1rem",
+                  }}
+                  handler={removeMemberHandler}
+                />
+              ))}
+            </Stack>
 
             {ButtonGroup}
           </>

@@ -5,7 +5,14 @@ import AvatarCard from "../components/shared/AvatarCard";
 
 const GroupList = ({ w = "100%", myGroups = [], chatId }) => {
   return (
-    <Stack width={w}>
+    <Stack
+      width={w}
+      sx={{
+        backgroundColor: "#CAF0F8",
+        height: "100vh",
+        overflow: "auto",
+      }}
+    >
       {myGroups.length > 0 ? (
         myGroups.map((group) => (
           <GroupListItem group={group} chatId={chatId} key={group._id} />

@@ -26,6 +26,105 @@ export const sampleData = [
     groupChat: false,
     members: ["1", "2"],
   },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "4",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "5",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "6",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "7",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "8",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "9",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "10",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "11",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "12",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "13",
+    groupChat: false,
+    members: ["1", "2"],
+  },
+  {
+    avatar: [
+      "https://secure-gl.imrworldwide.com/cgi-bin/m?ca=nlsn530690&cr=crtve&ce…lsen_plc0001&ci=nlsnci2891&am=3&at=view&rt=banner&st=image&r=1710074425462",
+    ],
+    name: "JohnBoi",
+    _id: "14",
+    groupChat: false,
+    members: ["1", "2"],
+  },
 ];
 
 export const sampleUsers = [
