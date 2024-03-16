@@ -2,6 +2,7 @@
 import {
   Close as CloseIcon,
   Dashboard as DashboardIcon,
+  ExitToApp as ExitToAppIcon,
   Groups as GroupsIcon,
   ManageAccounts as ManageAccountsIcon,
   Menu as MenuIcon,
@@ -15,9 +16,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "../styles/StyledComponents";
+import { useLocation, Link as LinkComponent } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const routes = [
   {
@@ -42,8 +44,22 @@ const routes = [
   },
 ];
 
+const Link = styled(LinkComponent)`
+  text-decoration: none;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  color: black;
+  &:hover {
+    color: rgba(0, 0, 0, 0.54);
+  }
+`;
+
 const Sidebar = ({ w = "100%" }) => {
   const location = useLocation();
+
+  const logoutHandler = () => {
+    console.log("Logout");
+  };
 
   return (
     <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"}>
@@ -53,19 +69,39 @@ const Sidebar = ({ w = "100%" }) => {
 
       <Stack spacing={"1rem"}>
         {routes.map((route) => (
-          <Link to={route.path} key={route.path}>
+          <Link
+            to={route.path}
+            key={route.path}
+            sx={
+              location.pathname === route.path && {
+                bgcolor: "#023E8A",
+                color: "white",
+                ":hover": {
+                  color: "white",
+                },
+              }
+            }
+          >
             <Stack direction={"row"} alignItems={"center"} spacing="1rem">
               {route.icon}
               <Typography>{route.name}</Typography>
             </Stack>
           </Link>
         ))}
+        <Link onClick={logoutHandler}>
+          <Stack direction={"row"} alignItems={"center"} spacing="1rem">
+            <ExitToAppIcon />
+            <Typography>Logout</Typography>
+          </Stack>
+        </Link>
       </Stack>
     </Stack>
   );
 };
 
 const AdminLayout = ({ children }) => {
+  const isAdmin = true;
+
   const [isMobile, setIsMobile] = useState(false);
 
   const handleMobile = () => {
@@ -75,6 +111,10 @@ const AdminLayout = ({ children }) => {
   const handleClose = () => {
     setIsMobile(false);
   };
+
+  if (!isAdmin) {
+    return <Navigate to={"/admin/login"} />;
+  }
 
   return (
     <Grid container minHeight={"100vh"}>
