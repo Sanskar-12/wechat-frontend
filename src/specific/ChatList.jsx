@@ -20,7 +20,7 @@ const ChatList = ({
       width={w}
       direction={"column"}
       sx={{
-        overflow: "auto",
+        overflowY: "auto",
         height: "100vh",
       }}
     >
