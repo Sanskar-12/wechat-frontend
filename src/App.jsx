@@ -1,8 +1,12 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 import { LayoutLoader } from "./components/layout/Loaders";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { server } from "./constants/config";
+import { userNotExists } from "./redux/reducers/auth";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -17,7 +21,15 @@ const ChatManagement = lazy(() => import("../src/admin/ChatManagement"));
 const MessageManagement = lazy(() => import("../src/admin/MessageManagement"));
 
 const App = () => {
-  let user = true;
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    axios
+      .get(`${server}/user/profile`)
+      .then((res) => console.log(res))
+      .catch((err) => dispatch(userNotExists()));
+  }, [dispatch]);
 
   return (
     <Router>
