@@ -7,6 +7,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { server } from "./constants/config";
 import { userNotExists } from "./redux/reducers/auth";
+import { Toaster } from "react-hot-toast";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -22,7 +23,7 @@ const MessageManagement = lazy(() => import("../src/admin/MessageManagement"));
 
 const App = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, loader } = useSelector((state) => state.auth);
 
   useEffect(() => {
     axios
@@ -31,7 +32,9 @@ const App = () => {
       .catch((err) => dispatch(userNotExists()));
   }, [dispatch]);
 
-  return (
+  return loader ? (
+    <LayoutLoader />
+  ) : (
     <Router>
       <Suspense fallback={<LayoutLoader />}>
         <Routes>
@@ -58,6 +61,8 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+
+      <Toaster />
     </Router>
   );
 };

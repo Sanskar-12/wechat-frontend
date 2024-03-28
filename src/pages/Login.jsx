@@ -13,6 +13,11 @@ import { useState } from "react";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { useInputValidation, useStrongPassword, useFileHandler } from "6pp";
 import { usernameValidator } from "../utils/validators";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { server } from "../constants/config";
+import { useDispatch } from "react-redux";
+import { userExists } from "../redux/reducers/auth";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -28,12 +33,65 @@ const Login = () => {
 
   const avatar = useFileHandler("single");
 
-  const loginHandler = (e) => {
+  const dispatch = useDispatch();
+
+  const loginHandler = async (e) => {
     e.preventDefault();
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      };
+
+      const { data } = await axios.post(
+        `${server}/user/login`,
+        {
+          username: username.value,
+          password: password.value,
+        },
+        config
+      );
+
+      dispatch(userExists(true));
+
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
   };
 
-  const signupHandler = (e) => {
+  const signupHandler = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("avatar", avatar.file);
+    formData.append("name", name.value);
+    formData.append("username", username.value);
+    formData.append("password", password.value);
+    formData.append("bio", bio.value);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    };
+
+    try {
+      const { data } = await axios.post(
+        `${server}/user/register`,
+        formData,
+        config
+      );
+      dispatch(userExists(true));
+
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   return (
