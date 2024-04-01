@@ -11,9 +11,7 @@ import { Skeleton, Drawer } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobileMenu } from "../../redux/reducers/misc";
 import { useErrors } from "../../../hooks/hook";
-import { useEffect } from "react";
-import axios from "axios";
-import { server } from "../../constants/config";
+import { getContext } from "../../socket";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -24,20 +22,11 @@ const AppLayout = () => (WrappedComponent) => {
     const { user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
+    const socket = getContext();
+
+    console.log(socket.id);
+
     const { data, isError, error, refetch, isLoading } = useMyChatsQuery("");
-
-    useEffect(() => {
-      const fetchAllChats = async () => {
-        const { data } = await axios.get(`${server}/chat/my/chat`, {
-          withCredentials: true,
-        });
-
-        console.log(data);
-      };
-      fetchAllChats();
-    }, []);
-
-    console.log(data);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();
