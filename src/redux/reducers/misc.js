@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isNewGroup: false,
   isAddMember: false,
-  isNotification: false,
+  isNotifications: false,
   isMobileMenu: false,
   isSearch: false,
   isFileMenu: false,
@@ -26,7 +26,7 @@ const miscSlice = createSlice({
       state.isAddMember = action.payload;
     },
     setIsNotification: (state, action) => {
-      state.isNotification = action.payload;
+      state.isNotifications = action.payload;
     },
 
     setIsMobileMenu: (state, action) => {

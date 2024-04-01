@@ -31,6 +31,13 @@ const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+    getAllNotifications: builder.query({
+      query: () => ({
+        url: `/user/all/notifications`,
+        credentials: "include",
+      }),
+      keepUnusedDataFor: 0,
+    }),
   }),
 });
 
@@ -39,4 +46,5 @@ export const {
   useMyChatsQuery,
   useLazySearchUserQuery,
   useSendFriendRequestMutation,
+  useGetAllNotificationsQuery,
 } = api;

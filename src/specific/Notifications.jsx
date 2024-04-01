@@ -8,30 +8,51 @@ import {
   ListItem,
   Avatar,
   Button,
+  Skeleton,
 } from "@mui/material";
-import { sampleNotifications } from "../constants/sampleData";
 import { memo } from "react";
+import { useGetAllNotificationsQuery } from "../redux/api/api";
+import { useErrors } from "../../hooks/hook";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsNotification } from "../redux/reducers/misc";
 
 const Notifications = () => {
+  const dispatch = useDispatch();
+  const { data, isError, error, isLoading } = useGetAllNotificationsQuery();
+
+  const { isNotifications } = useSelector((state) => state.misc);
+
   const friendRequestHandler = ({ _id, accept }) => {
     console.log(_id, accept);
   };
 
+  useErrors([{ isError, error }]);
+
+  const closeHandler = () => {
+    dispatch(setIsNotification(false));
+  };
+
   return (
-    <Dialog open>
+    <Dialog open={isNotifications} onClose={closeHandler}>
       <Stack p={{ xs: "1rem", sm: "2rem" }} maxWidth={"25rem"}>
         <DialogTitle>Notifications</DialogTitle>
-        {sampleNotifications.length > 0 ? (
-          sampleNotifications.map(({ sender, _id }) => (
-            <NotificationItem
-              sender={sender}
-              _id={_id}
-              handler={friendRequestHandler}
-              key={_id}
-            />
-          ))
+        {isLoading ? (
+          <Skeleton />
         ) : (
-          <Typography>No Notifications</Typography>
+          <>
+            {data?.allRequests?.length > 0 ? (
+              data?.allRequests?.map(({ sender, _id }) => (
+                <NotificationItem
+                  sender={sender}
+                  _id={_id}
+                  handler={friendRequestHandler}
+                  key={_id}
+                />
+              ))
+            ) : (
+              <Typography>No Notifications</Typography>
+            )}
+          </>
         )}
       </Stack>
     </Dialog>
@@ -49,7 +70,7 @@ const NotificationItem = memo(({ sender, _id, handler }) => {
         spacing={"1rem"}
         width={"100%"}
       >
-        <Avatar />
+        <Avatar src={avatar} />
         <Typography
           variant="body1"
           sx={{
