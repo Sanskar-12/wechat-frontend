@@ -7,7 +7,7 @@ const useErrors = (errors = []) => {
       if (isError) {
         if (fallback) fallback();
         else {
-          toast.error(error?.response?.data?.message);
+          toast.error(error?.data?.message);
         }
       }
     });

@@ -11,21 +11,49 @@ import FileMenu from "../dialog/FileMenu";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getContext } from "../socket";
 import { NEW_MESSAGE } from "../constants/events.js";
-import { useGetChatDetailsQuery } from "../redux/api/api.js";
-import { useSocket } from "../../hooks/hook.js";
-import { useSelector } from "react-redux";
+import {
+  useGetChatDetailsQuery,
+  useGetMessagesQuery,
+} from "../redux/api/api.js";
+import { useErrors, useSocket } from "../../hooks/hook.js";
+import { useSelector, useDispatch } from "react-redux";
+import { useInfiniteScrollTop } from "6pp";
+import { setIsFileMenu } from "../redux/reducers/misc.js";
 
 const ChatPage = ({ chatId }) => {
   const containerRef = useRef(null);
+  const dispatch = useDispatch();
 
   const socket = getContext();
+  const [message, setMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [messages, setMessages] = useState([]);
+  const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
 
   const chatDetails = useGetChatDetailsQuery({ chatId, skip: !chatId });
+  const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
+
+  const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessagesChunk?.data?.totalPages,
+    page,
+    setPage,
+    oldMessagesChunk?.data?.messages
+  );
+
   const { user } = useSelector((state) => state.auth);
 
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
   const members = chatDetails.data?.chat.members;
+
+  const errors = [
+    { isError: chatDetails.isError, error: chatDetails.error },
+    { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
+  ];
+
+  const handleFileOpen = (e) => {
+    dispatch(setIsFileMenu(true));
+    setFileMenuAnchor(e.currentTarget);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -45,6 +73,9 @@ const ChatPage = ({ chatId }) => {
   const eventHander = { [NEW_MESSAGE]: newMessageHandler };
 
   useSocket(socket, eventHander);
+  useErrors(errors);
+
+  const allMessages = [...oldMessages, ...messages];
 
   return (
     <>
@@ -57,14 +88,14 @@ const ChatPage = ({ chatId }) => {
             boxSizing={"border-box"}
             padding={"1rem"}
             spacing={"1rem"}
-            bgcolor="#e7ecef"
-            height={"90%"}
+            bgcolor={"#e7ecef"}
+            height={"100vh"}
             sx={{
               overflowX: "hidden",
               overflowY: "auto",
             }}
           >
-            {messages.map((message) => (
+            {allMessages.map((message) => (
               <MessageComponent
                 key={message._id}
                 message={message}
@@ -92,6 +123,7 @@ const ChatPage = ({ chatId }) => {
                   left: "1.5rem",
                   rotate: "30deg",
                 }}
+                onClick={handleFileOpen}
               >
                 <AttachFileIcon />
               </IconButton>
@@ -117,7 +149,7 @@ const ChatPage = ({ chatId }) => {
             </Stack>
           </form>
 
-          <FileMenu />
+          <FileMenu anchorE1={fileMenuAnchor} />
         </>
       )}
     </>
