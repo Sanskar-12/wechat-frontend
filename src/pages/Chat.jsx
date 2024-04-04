@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
 import { Stack, IconButton, Skeleton } from "@mui/material";
 import {
@@ -8,16 +8,12 @@ import {
 } from "@mui/icons-material";
 import { InputBox } from "../components/styles/StyledComponents";
 import FileMenu from "../dialog/FileMenu";
-import { sampleMessage } from "../constants/sampleData";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getContext } from "../socket";
 import { NEW_MESSAGE } from "../constants/events.js";
 import { useGetChatDetailsQuery } from "../redux/api/api.js";
-
-const user = {
-  _id: "sdfsfds",
-  name: "Sanskar",
-};
+import { useSocket } from "../../hooks/hook.js";
+import { useSelector } from "react-redux";
 
 const ChatPage = ({ chatId }) => {
   const containerRef = useRef(null);
@@ -25,11 +21,11 @@ const ChatPage = ({ chatId }) => {
   const socket = getContext();
 
   const chatDetails = useGetChatDetailsQuery({ chatId, skip: !chatId });
+  const { user } = useSelector((state) => state.auth);
 
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
   const members = chatDetails.data?.chat.members;
-
-  console.log(members);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -40,6 +36,15 @@ const ChatPage = ({ chatId }) => {
     socket.emit(NEW_MESSAGE, { chatId, members, message });
     setMessage("");
   };
+
+  const newMessageHandler = useCallback((data) => {
+    console.log(data);
+    setMessages((prev) => [...prev, data.message]);
+  }, []);
+
+  const eventHander = { [NEW_MESSAGE]: newMessageHandler };
+
+  useSocket(socket, eventHander);
 
   return (
     <>
@@ -59,7 +64,7 @@ const ChatPage = ({ chatId }) => {
               overflowY: "auto",
             }}
           >
-            {sampleMessage.map((message) => (
+            {messages.map((message) => (
               <MessageComponent
                 key={message._id}
                 message={message}
