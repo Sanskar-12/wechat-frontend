@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import AppLayout from "../components/layout/AppLayout";
 import { Stack, IconButton, Skeleton } from "@mui/material";
 import {
@@ -65,10 +65,22 @@ const ChatPage = ({ chatId }) => {
     setMessage("");
   };
 
-  const newMessageHandler = useCallback((data) => {
-    console.log(data);
-    setMessages((prev) => [...prev, data.message]);
-  }, []);
+  const newMessageHandler = useCallback(
+    (data) => {
+      if (data?.chatId !== chatId) return;
+      setMessages((prev) => [...prev, data.message]);
+    },
+    [chatId]
+  );
+
+  useEffect(() => {
+    return () => {
+      setMessage("");
+      setMessages([]);
+      setPage(1);
+      setOldMessages([]);
+    };
+  }, [chatId]);
 
   const eventHander = { [NEW_MESSAGE]: newMessageHandler };
 
@@ -149,7 +161,7 @@ const ChatPage = ({ chatId }) => {
             </Stack>
           </form>
 
-          <FileMenu anchorE1={fileMenuAnchor} />
+          <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
         </>
       )}
     </>

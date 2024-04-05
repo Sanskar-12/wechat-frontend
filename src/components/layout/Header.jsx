@@ -6,6 +6,7 @@ import {
   IconButton,
   Tooltip,
   Backdrop,
+  Badge,
 } from "@mui/material";
 import { darkBlue } from "../../constants/color";
 import {
@@ -28,6 +29,7 @@ import {
   setIsNotification,
   setIsSearch,
 } from "../../redux/reducers/misc.js";
+import { resetNotifications } from "../../redux/reducers/chat.js";
 const Search = lazy(() => import("../../specific/Search"));
 const Notifications = lazy(() => import("../../specific/Notifications"));
 const GroupDialog = lazy(() => import("../../dialog/GroupDialog"));
@@ -37,6 +39,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const { isSearch, isNotifications } = useSelector((state) => state.misc);
+  const { notificationCount } = useSelector((state) => state.chat);
 
   const [isNewGroup, setIsNewGroup] = useState(false);
 
@@ -56,8 +59,9 @@ const Header = () => {
     navigate("/groups");
   };
 
-  const notificationHandler = () => {
-    dispatch(setIsNotification(true));
+  const notificationHandler = async () => {
+    await dispatch(setIsNotification(true));
+    dispatch(resetNotifications());
   };
 
   const logoutHandler = async () => {
@@ -131,7 +135,13 @@ const Header = () => {
                   size="large"
                   onClick={notificationHandler}
                 >
-                  <NotificationsIcon />
+                  {notificationCount ? (
+                    <Badge badgeContent={notificationCount} color="error">
+                      <NotificationsIcon />
+                    </Badge>
+                  ) : (
+                    <NotificationsIcon />
+                  )}
                 </IconButton>
               </Tooltip>
               <Tooltip title="Logout">

@@ -10,8 +10,11 @@ import { useMyChatsQuery } from "../../redux/api/api";
 import { Skeleton, Drawer } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsMobileMenu } from "../../redux/reducers/misc";
-import { useErrors } from "../../../hooks/hook";
+import { useErrors, useSocket } from "../../../hooks/hook";
 import { getContext } from "../../socket";
+import { NEW_MESSAGE_ALERT, NEW_REQUEST } from "../../constants/events";
+import { useCallback } from "react";
+import { incrementNotifications } from "../../redux/reducers/chat";
 
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
@@ -24,9 +27,19 @@ const AppLayout = () => (WrappedComponent) => {
 
     const socket = getContext();
 
-    console.log(socket.id);
-
     const { data, isError, error, refetch, isLoading } = useMyChatsQuery("");
+
+    const newMessageAlertHandler = useCallback(() => {}, []);
+    const newRequestHandler = useCallback(() => {
+      dispatch(incrementNotifications());
+    }, [dispatch]);
+
+    const eventHanders = {
+      [NEW_MESSAGE_ALERT]: newMessageAlertHandler,
+      [NEW_REQUEST]: newRequestHandler,
+    };
+
+    useSocket(socket, eventHanders);
 
     const handleDeleteChat = (e, _id, groupChat) => {
       e.preventDefault();

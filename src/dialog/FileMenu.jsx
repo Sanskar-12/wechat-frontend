@@ -2,7 +2,7 @@
 
 import { Menu, MenuList, MenuItem, Tooltip, ListItemText } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsFileMenu } from "../redux/reducers/misc";
+import { setIsFileMenu, setIsUploadingLoader } from "../redux/reducers/misc";
 import {
   Image as ImageIcon,
   AudioFile as AudioFileIcon,
@@ -10,14 +10,18 @@ import {
   UploadFile as UploadFileIcon,
 } from "@mui/icons-material";
 import { useRef } from "react";
+import { toast } from "react-hot-toast";
+import { useSendAttachmentsMutation } from "../redux/api/api";
 
-const FileMenu = ({ anchorE1 }) => {
+const FileMenu = ({ anchorE1, chatId }) => {
   const dispatch = useDispatch();
   const { isFileMenu } = useSelector((state) => state.misc);
   const imageRef = useRef();
   const audioRef = useRef();
   const videoRef = useRef();
   const fileRef = useRef();
+
+  const [sendAttachments] = useSendAttachmentsMutation();
 
   const closeHandler = () => {
     dispatch(setIsFileMenu(false));
@@ -36,7 +40,37 @@ const FileMenu = ({ anchorE1 }) => {
     fileRef.current.click();
   };
 
-  const fileChangeHandler = (e, key) => {};
+  const fileChangeHandler = async (e, key) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length <= 0) return;
+
+    if (files.length > 5) {
+      return toast.error(`You can only send 5 ${key} at a time`);
+    }
+
+    dispatch(setIsUploadingLoader(true));
+    const toastId = toast.loading(`Sending ${key} ...`);
+    closeHandler();
+
+    try {
+      const myForm = new FormData();
+
+      myForm.append("chatId", chatId);
+      files.forEach((file) => myForm.append("files", file));
+
+      const res = await sendAttachments(myForm);
+      if (res?.data) {
+        toast.success(`${key} sent successfully`, { id: toastId });
+      } else {
+        toast.error(`Failed to send ${key}`, { id: toastId });
+      }
+    } catch (error) {
+      toast.error(error, { id: toastId });
+    } finally {
+      dispatch(setIsUploadingLoader(false));
+    }
+  };
 
   return (
     <Menu anchorEl={anchorE1} open={isFileMenu} onClose={closeHandler}>
@@ -54,7 +88,7 @@ const FileMenu = ({ anchorE1 }) => {
             <input
               type="file"
               multiple
-              accept="image/png, image/jpeg, image/gif"
+              accept="image/png, image/jpeg, image/jpg, image/gif"
               style={{
                 display: "none",
               }}
