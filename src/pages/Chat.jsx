@@ -19,6 +19,7 @@ import { useErrors, useSocket } from "../../hooks/hook.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useInfiniteScrollTop } from "6pp";
 import { setIsFileMenu } from "../redux/reducers/misc.js";
+import { removeNewMessagesAlert } from "../redux/reducers/chat.js";
 
 const ChatPage = ({ chatId }) => {
   const containerRef = useRef(null);
@@ -74,13 +75,14 @@ const ChatPage = ({ chatId }) => {
   );
 
   useEffect(() => {
+    dispatch(removeNewMessagesAlert(chatId));
     return () => {
       setMessage("");
       setMessages([]);
       setPage(1);
       setOldMessages([]);
     };
-  }, [chatId]);
+  }, [chatId, dispatch, setOldMessages]);
 
   const eventHander = { [NEW_MESSAGE]: newMessageHandler };
 
