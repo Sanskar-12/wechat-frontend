@@ -23,6 +23,9 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import GroupList from "../specific/GroupList";
 import { sampleData, sampleUsers } from "../constants/sampleData";
 import UserItem from "../components/shared/UserItem";
+import { useMyGroupsQuery } from "../redux/api/api.js";
+import { useErrors } from "../../hooks/hook.js";
+import { LayoutLoader } from "../components/layout/Loaders";
 const ConfirmDeleteDialog = lazy(() => import("../dialog/ConfirmDeleteDialog"));
 const AddMemberDialog = lazy(() => import("../dialog/AddMemberDialog"));
 
@@ -31,6 +34,10 @@ const isAddMember = false;
 const Groups = () => {
   const chatId = useSearchParams()[0].get("group");
 
+  const { isLoading, data, isError, error } = useMyGroupsQuery("");
+
+  console.log(data);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -38,6 +45,8 @@ const Groups = () => {
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
 
   const navigate = useNavigate();
+
+  useErrors([{ isError, error }]);
 
   const navigateBack = () => {
     navigate("/");
@@ -196,7 +205,9 @@ const Groups = () => {
     </>
   );
 
-  return (
+  return isLoading ? (
+    <LayoutLoader />
+  ) : (
     <Grid container height={"100vh"}>
       <Grid
         item

@@ -18,7 +18,7 @@ import {
   Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +26,7 @@ import { server } from "../../constants/config.js";
 import { userNotExists } from "../../redux/reducers/auth.js";
 import {
   setIsMobileMenu,
+  setIsNewGroup,
   setIsNotification,
   setIsSearch,
 } from "../../redux/reducers/misc.js";
@@ -38,10 +39,10 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { isSearch, isNotifications } = useSelector((state) => state.misc);
+  const { isSearch, isNotifications, isNewGroup } = useSelector(
+    (state) => state.misc
+  );
   const { notificationCount } = useSelector((state) => state.chat);
-
-  const [isNewGroup, setIsNewGroup] = useState(false);
 
   const handleMobileMenu = () => {
     dispatch(setIsMobileMenu(true));
@@ -52,7 +53,7 @@ const Header = () => {
   };
 
   const openNewGroupHandler = () => {
-    setIsNewGroup((prev) => !prev);
+    dispatch(setIsNewGroup(true));
   };
 
   const navigateToGroup = () => {

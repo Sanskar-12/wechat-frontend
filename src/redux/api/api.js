@@ -15,6 +15,7 @@ const api = createApi({
       }),
       providesTags: ["Chats"],
     }),
+
     searchUser: builder.query({
       query: (name) => ({
         url: `/user/search?name=${name}`,
@@ -22,6 +23,7 @@ const api = createApi({
       }),
       providesTags: ["Users"],
     }),
+
     sendFriendRequest: builder.mutation({
       query: (data) => ({
         url: "/user/sendrequest",
@@ -31,6 +33,7 @@ const api = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
+
     getAllNotifications: builder.query({
       query: () => ({
         url: `/user/all/notifications`,
@@ -80,6 +83,39 @@ const api = createApi({
         body: data,
       }),
     }),
+
+    myGroups: builder.query({
+      query: () => ({
+        url: "/chat/my/group",
+        credentials: "include",
+      }),
+      providesTags: ["Chats"],
+    }),
+
+    getAvailableFriends: builder.query({
+      query: ({ chatId }) => {
+        let url = `/user/my/friends`;
+        if (chatId) {
+          url = url + `?chatId=${chatId}`;
+        }
+
+        return {
+          url,
+          credentials: "include",
+        };
+      },
+      providesTags: ["Chats"],
+    }),
+
+    newGroupChat: builder.mutation({
+      query: ({ name, members }) => ({
+        url: "/chat/new/group",
+        method: "POST",
+        credentials: "include",
+        body: { name, members },
+      }),
+      invalidatesTags: ["Chats"],
+    }),
   }),
 });
 
@@ -93,4 +129,7 @@ export const {
   useGetChatDetailsQuery,
   useGetMessagesQuery,
   useSendAttachmentsMutation,
+  useMyGroupsQuery,
+  useGetAvailableFriendsQuery,
+  useNewGroupChatMutation,
 } = api;
