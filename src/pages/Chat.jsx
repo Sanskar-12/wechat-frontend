@@ -10,7 +10,12 @@ import { InputBox } from "../components/styles/StyledComponents";
 import FileMenu from "../dialog/FileMenu";
 import MessageComponent from "../components/shared/MessageComponent";
 import { getContext } from "../socket";
-import { NEW_MESSAGE, START_TYPING, STOP_TYPING } from "../constants/events.js";
+import {
+  ALERT,
+  NEW_MESSAGE,
+  START_TYPING,
+  STOP_TYPING,
+} from "../constants/events.js";
 import {
   useGetChatDetailsQuery,
   useGetMessagesQuery,
@@ -106,10 +111,28 @@ const ChatPage = ({ chatId }) => {
     [chatId]
   );
 
+  const alertListener = useCallback(
+    (content) => {
+      const messageForAlert = {
+        content,
+        sender: {
+          _id: "sdfsdf",
+          name: "Admin",
+        },
+        chat: chatId,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, messageForAlert]);
+    },
+    [chatId]
+  );
+
   const eventHander = {
     [NEW_MESSAGE]: newMessageHandler,
     [START_TYPING]: startTypingListener,
     [STOP_TYPING]: stopTypingListener,
+    [ALERT]: alertListener,
   };
 
   useSocket(socket, eventHander);
