@@ -12,7 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsMobileMenu } from "../../redux/reducers/misc";
 import { useErrors, useSocket } from "../../../hooks/hook";
 import { getContext } from "../../socket";
-import { NEW_MESSAGE_ALERT, NEW_REQUEST } from "../../constants/events";
+import {
+  NEW_MESSAGE_ALERT,
+  NEW_REQUEST,
+  REFETCH_CHATS,
+} from "../../constants/events";
 import { useCallback, useEffect } from "react";
 import {
   incrementNotifications,
@@ -32,7 +36,7 @@ const AppLayout = () => (WrappedComponent) => {
 
     const socket = getContext();
 
-    const { data, isError, error, isLoading } = useMyChatsQuery("");
+    const { data, isError, error, isLoading, refetch } = useMyChatsQuery("");
 
     const newMessageAlertHandler = useCallback(
       (data) => {
@@ -46,9 +50,14 @@ const AppLayout = () => (WrappedComponent) => {
       dispatch(incrementNotifications());
     }, [dispatch]);
 
+    const refetchListener = useCallback(() => {
+      refetch();
+    }, [refetch]);
+
     const eventHanders = {
       [NEW_MESSAGE_ALERT]: newMessageAlertHandler,
       [NEW_REQUEST]: newRequestHandler,
+      [REFETCH_CHATS]: refetchListener,
     };
 
     useSocket(socket, eventHanders);
