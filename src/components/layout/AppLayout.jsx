@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import Title from "../shared/Title";
 import Header from "./Header";
 import ChatList from "../../specific/ChatList";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Profile from "../shared/Profile";
 import { useMyChatsQuery } from "../../redux/api/api";
 import { Skeleton, Drawer } from "@mui/material";
@@ -28,6 +28,7 @@ const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const params = useParams();
     const chatId = params.chatId;
+    const navigate = useNavigate();
 
     const { isMobileMenu } = useSelector((state) => state.misc);
     const { user } = useSelector((state) => state.auth);
@@ -52,7 +53,8 @@ const AppLayout = () => (WrappedComponent) => {
 
     const refetchListener = useCallback(() => {
       refetch();
-    }, [refetch]);
+      navigate("/");
+    }, [refetch, navigate]);
 
     const eventHanders = {
       [NEW_MESSAGE_ALERT]: newMessageAlertHandler,

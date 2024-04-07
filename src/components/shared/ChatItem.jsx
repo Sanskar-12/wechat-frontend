@@ -13,7 +13,6 @@ const ChatItemBox = ({
   sameSender,
   isOnline,
   newMessageAlert,
-  index = 0,
   handleDeleteChat,
 }) => {
   return (

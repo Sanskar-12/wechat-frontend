@@ -26,10 +26,12 @@ import { useInfiniteScrollTop } from "6pp";
 import { setIsFileMenu } from "../redux/reducers/misc.js";
 import { removeNewMessagesAlert } from "../redux/reducers/chat.js";
 import { TypingLoader } from "../components/layout/Loaders.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ChatPage = ({ chatId }) => {
   const containerRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const socket = getContext();
   const [message, setMessage] = useState("");
@@ -86,6 +88,12 @@ const ChatPage = ({ chatId }) => {
       setOldMessages([]);
     };
   }, [chatId, dispatch, setOldMessages]);
+
+  useEffect(() => {
+    if (!chatDetails?.data?.chat) {
+      navigate("/");
+    }
+  }, [chatDetails?.data?.chat, navigate]);
 
   const newMessageHandler = useCallback(
     (data) => {
