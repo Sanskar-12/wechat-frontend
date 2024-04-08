@@ -4,6 +4,7 @@ import { Typography, Box } from "@mui/material";
 import moment from "moment";
 import { fileFormat } from "../../lib/features";
 import RenderAttachments from "./RenderAttachments";
+import { motion } from "framer-motion";
 
 const MessageComponentPage = ({ message, user }) => {
   const { sender, content, attachments = [], createdAt } = message;
@@ -13,7 +14,9 @@ const MessageComponentPage = ({ message, user }) => {
   const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: "-100%" }}
+      whileInView={{ opacity: 1, x: 0 }}
       style={{
         alignSelf: sameSender ? "flex-end" : "flex-start",
         backgroundColor: sameSender ? "#90E0EF" : "white",
@@ -56,7 +59,7 @@ const MessageComponentPage = ({ message, user }) => {
       <Typography variant="caption" color={"text.secondary"}>
         {timeAgo}
       </Typography>
-    </div>
+    </motion.div>
   );
 };
 

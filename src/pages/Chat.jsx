@@ -90,10 +90,10 @@ const ChatPage = ({ chatId }) => {
   }, [chatId, dispatch, setOldMessages]);
 
   useEffect(() => {
-    if (!chatDetails?.data?.chat) {
-      navigate("/");
+    if (chatDetails?.isError) {
+      return navigate("/");
     }
-  }, [chatDetails?.data?.chat, navigate]);
+  }, [chatDetails?.isError, navigate]);
 
   const newMessageHandler = useCallback(
     (data) => {
