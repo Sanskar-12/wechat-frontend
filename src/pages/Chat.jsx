@@ -120,14 +120,15 @@ const ChatPage = ({ chatId }) => {
   );
 
   const alertListener = useCallback(
-    (content) => {
+    (data) => {
+      if (data.chatId !== chatId) return;
       const messageForAlert = {
-        content,
+        content: data.message,
         sender: {
           _id: "sdfsdf",
           name: "Admin",
         },
-        chat: chatId,
+        chat: data.chatId,
         createdAt: new Date().toISOString(),
       };
 

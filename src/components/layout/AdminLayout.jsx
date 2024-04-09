@@ -17,9 +17,11 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Link as LinkComponent } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { adminLogout, getAdmin } from "../../redux/thunks/admin";
 
 const routes = [
   {
@@ -56,9 +58,10 @@ const Link = styled(LinkComponent)`
 
 const Sidebar = ({ w = "100%" }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const logoutHandler = () => {
-    console.log("Logout");
+    dispatch(adminLogout());
   };
 
   return (
@@ -100,7 +103,8 @@ const Sidebar = ({ w = "100%" }) => {
 };
 
 const AdminLayout = ({ children }) => {
-  const isAdmin = true;
+  const { isAdmin } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -111,6 +115,10 @@ const AdminLayout = ({ children }) => {
   const handleClose = () => {
     setIsMobile(false);
   };
+
+  useEffect(() => {
+    dispatch(getAdmin());
+  }, [dispatch]);
 
   if (!isAdmin) {
     return <Navigate to={"/admin/login"} />;

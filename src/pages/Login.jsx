@@ -21,6 +21,7 @@ import { userExists } from "../redux/reducers/auth";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleLogin = () => {
     setIsLogin((prev) => !prev);
@@ -37,6 +38,8 @@ const Login = () => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Logging In...");
+    setIsLoading(true);
     try {
       const config = {
         headers: {
@@ -54,16 +57,22 @@ const Login = () => {
         config
       );
 
-      dispatch(userExists(true));
+      dispatch(userExists(data.user));
 
-      toast.success(data.message);
+      toast.success(data.message, {
+        id: toastId,
+      });
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signupHandler = async (e) => {
     e.preventDefault();
+    const toastId = toast.loading("Signing Up...");
+    setIsLoading(true);
 
     const formData = new FormData();
 
@@ -86,11 +95,15 @@ const Login = () => {
         formData,
         config
       );
-      dispatch(userExists(true));
+      dispatch(userExists(data.user));
 
-      toast.success(data.message);
+      toast.success(data.message, {
+        id: toastId,
+      });
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,6 +168,7 @@ const Login = () => {
                   </Typography>
                 )}
                 <Button
+                  disabled={isLoading}
                   sx={{
                     marginTop: "1rem",
                     bgcolor: "#0353a4",
@@ -169,7 +183,12 @@ const Login = () => {
                 <Typography textAlign={"center"} m={"1rem"}>
                   OR
                 </Typography>
-                <Button variant="text" fullWidth onClick={toggleLogin}>
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={toggleLogin}
+                  disabled={isLoading}
+                >
                   Sign Up Instead
                 </Button>
               </form>
@@ -274,6 +293,7 @@ const Login = () => {
                   </Typography>
                 )}
                 <Button
+                  disabled={isLoading}
                   sx={{
                     marginTop: "1rem",
                     bgcolor: "#0353a4",
@@ -288,7 +308,12 @@ const Login = () => {
                 <Typography textAlign={"center"} m={"1rem"}>
                   OR
                 </Typography>
-                <Button variant="text" fullWidth onClick={toggleLogin}>
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={toggleLogin}
+                  disabled={isLoading}
+                >
                   Login Instead
                 </Button>
               </form>
