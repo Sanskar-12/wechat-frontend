@@ -14,8 +14,26 @@ import {
   SearchField,
 } from "../components/styles/StyledComponents";
 import { DoughnutChart, LineChart } from "../specific/Charts";
+import { useFetchData } from "6pp";
+import { server } from "../constants/config";
+import { LayoutLoader } from "../components/layout/Loaders";
+import { useErrors } from "../../hooks/hook.js";
 
 const AdminDashboard = () => {
+  const { loading, data, error } = useFetchData(
+    `${server}/admin/stats`,
+    "dashbord-stats"
+  );
+
+  const { stats } = data || [];
+
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
+
   const AppBar = (
     <>
       <Paper
@@ -32,7 +50,7 @@ const AdminDashboard = () => {
               fontSize: "3rem",
             }}
           />
-          <SearchField />
+          <SearchField placeholder="Search..." />
 
           <CurveButton>Search</CurveButton>
           <Box flexGrow={1} />
@@ -65,14 +83,28 @@ const AdminDashboard = () => {
         alignItems={"center"}
         margin={"2rem 0"}
       >
-        <Widget title={"Users"} value={34} Icon={<PersonIcon />} />
-        <Widget title={"Chats"} value={34} Icon={<GroupIcon />} />
-        <Widget title={"Messages"} value={34} Icon={<MessageIcon />} />
+        <Widget
+          title={"Users"}
+          value={stats?.usersCount || 0}
+          Icon={<PersonIcon />}
+        />
+        <Widget
+          title={"Chats"}
+          value={stats?.totalChatCount || 0}
+          Icon={<GroupIcon />}
+        />
+        <Widget
+          title={"Messages"}
+          value={stats?.messagesCount || 0}
+          Icon={<MessageIcon />}
+        />
       </Stack>
     </>
   );
 
-  return (
+  return loading ? (
+    <LayoutLoader />
+  ) : (
     <AdminLayout>
       <Container component={"main"}>
         {AppBar}
@@ -105,7 +137,7 @@ const AdminDashboard = () => {
             <Typography margin={"2rem 0"} variant="h4">
               Last Messages
             </Typography>
-            <LineChart value={[1, 1, 334, 34, 354, 5, 6]} />
+            <LineChart value={stats?.messagesChart || []} />
           </Paper>
 
           <Paper
@@ -125,7 +157,10 @@ const AdminDashboard = () => {
             }}
           >
             <DoughnutChart
-              value={[23, 66]}
+              value={[
+                stats?.totalChatCount - stats?.groupsCount || 0,
+                stats?.groupsCount || 0,
+              ]}
               labels={["Single Chats", "Group Chats"]}
             />
 
