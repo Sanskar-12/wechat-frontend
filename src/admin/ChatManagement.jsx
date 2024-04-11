@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../components/layout/AdminLayout";
 import Table from "../components/shared/Table";
 import { Avatar, Stack } from "@mui/material";
-import { dashboardData } from "../constants/sampleData";
 import { transformImage } from "../lib/features";
 import AvatarCard from "../components/shared/AvatarCard";
+import { useFetchData } from "6pp";
+import { server } from "../constants/config";
+import { LayoutLoader } from "../components/layout/Loaders";
+import { useErrors } from "../../hooks/hook.js";
+
 const columns = [
   {
     field: "id",
@@ -61,26 +65,46 @@ const columns = [
 ];
 
 const ChatManagement = () => {
+  const { loading, data, error } = useFetchData(
+    `${server}/admin/chats`,
+    "chats"
+  );
+
+  const { transformedChats } = data || [];
+
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
+
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    setRows(
-      dashboardData.chats.map((chat) => ({
-        ...chat,
-        id: chat._id,
-        avatar: chat.avatar.map((i) => transformImage(i, 50)),
-        members: chat.members.map((i) => transformImage(i.avatar, 50)),
-        creator: {
-          name: chat.creator.name,
-          avatar: transformImage(chat.creator.avatar),
-        },
-      }))
-    );
-  }, []);
+    if (transformedChats) {
+      setRows(
+        transformedChats?.map((chat) => ({
+          ...chat,
+          id: chat._id,
+          avatar: chat.avatar.map((i) => transformImage(i, 50)),
+          members: chat.members.map((i) => transformImage(i.avatar, 50)),
+          creator: {
+            name: chat.creator.name,
+            avatar: transformImage(chat.creator.avatar),
+          },
+        }))
+      );
+    }
+  }, [transformedChats]);
 
   return (
     <AdminLayout>
-      <Table rows={rows} columns={columns} heading={"All Chats"} />
+      {loading ? (
+        <LayoutLoader />
+      ) : (
+        <Table rows={rows} columns={columns} heading={"All Chats"} />
+      )}
     </AdminLayout>
   );
 };

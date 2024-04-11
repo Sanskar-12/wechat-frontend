@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../components/layout/AdminLayout";
 import Table from "../components/shared/Table";
 import { Avatar, Stack, Box } from "@mui/material";
-import { dashboardData } from "../constants/sampleData";
 import { fileFormat, transformImage } from "../lib/features";
 import moment from "moment";
 import RenderAttachments from "../components/shared/RenderAttachments";
+import { useFetchData } from "6pp";
+import { server } from "../constants/config";
+import { LayoutLoader } from "../components/layout/Loaders";
+import { useErrors } from "../../hooks/hook.js";
 
 const columns = [
   {
@@ -85,30 +88,52 @@ const columns = [
 ];
 
 const MessageManagement = () => {
+  const { loading, data, error } = useFetchData(
+    `${server}/admin/messages`,
+    "messages"
+  );
+
+  const { transformedMessages } = data || [];
+
+  useErrors([
+    {
+      isError: error,
+      error: error,
+    },
+  ]);
+
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    setRows(
-      dashboardData.messages.map((message) => ({
-        ...message,
-        id: message._id,
-        sender: {
-          name: message.sender.name,
-          avatar: transformImage(message.sender.avatar, 50),
-        },
-        createdAt: moment(message.createdAt).format("MMMM Do YYYY, h:mm:ss a"),
-      }))
-    );
-  }, []);
+    if (transformedMessages) {
+      setRows(
+        transformedMessages?.map((message) => ({
+          ...message,
+          id: message._id,
+          sender: {
+            name: message.sender.name,
+            avatar: transformImage(message.sender.avatar, 50),
+          },
+          createdAt: moment(message.createdAt).format(
+            "MMMM Do YYYY, h:mm:ss a"
+          ),
+        }))
+      );
+    }
+  }, [transformedMessages]);
 
   return (
     <AdminLayout>
-      <Table
-        rows={rows}
-        columns={columns}
-        heading={"All Messages"}
-        rowHeight={200}
-      />
+      {loading ? (
+        <LayoutLoader />
+      ) : (
+        <Table
+          rows={rows}
+          columns={columns}
+          heading={"All Messages"}
+          rowHeight={200}
+        />
+      )}
     </AdminLayout>
   );
 };
